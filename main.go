@@ -12,15 +12,28 @@ import (
 )
 
 var CLI struct {
-	Source string `help:"json file with urls" default:"data.json" type:"file:"`
-	Output string `help:"output directory" default:"./out" type:"path"`
+	Source  string `help:"Path to a json file with urls or URL" default:"data.json" type:"file:" short:"s"`
+	Output  string `help:"Download path" default:"./out" type:"path" short:"o"`
+	Version bool   `help:"Show version" short:"v"`
 }
 
 var failed []string
 
+var version string = "dev"
+var commit string = "none"
+
 func main() {
 	ctx := kong.Parse(&CLI)
 	client := grab.NewClient()
+
+	if CLI.Version {
+		if len(commit) >= 7 {
+			commit = commit[:7]
+		}
+
+		fmt.Println(fmt.Sprintf("%s (%s)", version, commit))
+		return
+	}
 
 	data, err := os.ReadFile(CLI.Source)
 	ctx.FatalIfErrorf(err)
