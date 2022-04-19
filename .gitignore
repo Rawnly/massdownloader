@@ -1,4 +1,3 @@
-data-small.json
-data.json
+.DS_Store
 dist/
 massdownloader
